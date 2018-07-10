@@ -1,0 +1,17 @@
+#define HOSTNAME "ESP-Deckenlicht"
+
+#define WIFI_SSID "backspace"
+#define WIFI_PASSWORD ""
+
+#define MQTT_HOST "mqtt.core.bckspc.de"
+#define MQTT_PORT 1883
+#define MQTT_MAX_CONNECT_RETRY 42
+
+#define OTA_PASSWORD ""
+
+const char* MQTT_TOPIC_STATE = "state/deckenlicht/hackcenter";
+const char* MQTT_TOPIC_BASE = "actors/deckenlicht/hackcenter/#";
+
+#define I2C_SDA D3
+#define I2C_SCL D4
+
