@@ -1,7 +1,6 @@
 #include <PubSubClient.h>
 #include <ArduinoOTA.h>
 #include "settings.h"
-#include "CIE.h"
 #include <Wire.h>
 #include <PCA9685.h>
 
@@ -40,6 +39,7 @@ void mqttConnect() {
 }
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
+  payload[length] = '\0';
   const char* identifier = topic + strlen(MQTT_TOPIC_BASE) - 1;
 
   Serial.print("MQTT ");
@@ -49,12 +49,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
 
   if (identifier[0] >= '0' && identifier[0] <= '9') {
     uint8_t light = atoi(identifier);
-
-    char buf[8];
-    memset(buf, 0, sizeof(buf));
-    strncpy(buf, (const char*) payload, length);
-    
-    uint8_t brightness = atoi(buf);
+    uint8_t brightness = atoi((char*) payload);
     
     Serial.print(" -> ");
     Serial.println(brightness);
