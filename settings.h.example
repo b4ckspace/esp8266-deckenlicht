@@ -9,8 +9,12 @@
 
 #define OTA_PASSWORD ""
 
+#define TEMPERATURE_PIN A0
+#define TEMPERATURE_POLL_INTERVAL_MS (5 * 60 * 1000)
+
 const char* MQTT_TOPIC_STATE = "state/deckenlicht/hackcenter";
 const char* MQTT_TOPIC_BASE = "actors/deckenlicht/hackcenter/#";
+const char* MQTT_TOPIC_TEMPERATURE = "sensor/temperature/deckenlicht/hackcenter";
 
 #define I2C_SDA D3
 #define I2C_SCL D4

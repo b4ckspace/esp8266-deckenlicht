@@ -7,6 +7,8 @@
 WiFiClient wifiClient;
 PubSubClient mqttClient;
 uint8_t mqttRetryCounter = 0;
+unsigned long lastMs;
+char sprintfHelper[16] = {0};
 
 PCA9685 driver = PCA9685(0x00, PCA9685_MODE_N_DRIVER, PCA9685_MIN_FREQUENCY);
 
@@ -58,9 +60,6 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-
-int outputpin = A0;
-
 void setup() {
   Serial.begin(115200);
 
@@ -93,14 +92,17 @@ void setup() {
 
 void loop() {
   mqttConnect();
-  
-/*
-  int analogValue = analogRead(outputpin);
-  float voltage = ((analogValue / 1024.0) * 3.3);
-  float celsius = (voltage - 0.5) * 100.0;
 
-  Serial.println(celsius);
-*/
+  if (lastMs + TEMPERATURE_POLL_INTERVAL_MS < millis()) {
+    lastMs = millis();
+
+    int analogValue = analogRead(TEMPERATURE_PIN);
+    float voltage = ((analogValue / 1024.0) * 3.3);
+    float celsius = (voltage - 0.5) * 100.0;
+
+    dtostrf(celsius, 4, 2, sprintfHelper);
+    mqttClient.publish(MQTT_TOPIC_TEMPERATURE, sprintfHelper, true);
+  }
 
   mqttClient.loop();
   ArduinoOTA.handle();
