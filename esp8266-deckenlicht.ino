@@ -1,6 +1,7 @@
 #include <PubSubClient.h>
 #include <ArduinoOTA.h>
 #include "settings.h"
+#include "CIE.h"
 #include <Wire.h>
 #include <PCA9685.h>
 
@@ -10,7 +11,7 @@ uint8_t mqttRetryCounter = 0;
 unsigned long lastMs;
 char sprintfHelper[16] = {0};
 
-PCA9685 driver = PCA9685(0x00, PCA9685_MODE_N_DRIVER, PCA9685_MIN_FREQUENCY);
+PCA9685 driver = PCA9685(0x00, PCA9685_MODE_N_DRIVER, 1000);
 
 void setLight(uint8_t light, uint8_t value) {
   light = constrain(light, 0, 9);
@@ -18,7 +19,7 @@ void setLight(uint8_t light, uint8_t value) {
   
   driver
     .getPin(light)
-    .setValueAndWrite(map(value, 0, 100, PCA9685_FULL_OFF, PCA9685_FULL_ON));
+    .setValueAndWrite(CIE[value]);
 }
 
 void mqttConnect() {
